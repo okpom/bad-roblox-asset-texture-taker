@@ -2,6 +2,7 @@ import requests
 import re
 import xml.etree.ElementTree as ET
 from api_key_handler import API_KEY
+from debug_helper import debug_print
 
 
 def get_asset_id(url_or_id):
@@ -27,7 +28,7 @@ def get_asset_url(asset_id):
     url = f"https://apis.roblox.com/asset-delivery-api/v1/assetId/{asset_id}"
     headers = {"x-api-key": API_KEY}
 
-    print(f"Requesting URL for assetId: {asset_id}")
+    debug_print(f"Requesting URL for assetId: {asset_id}")
 
     try:
         response = requests.get(url, headers=headers)

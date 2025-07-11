@@ -7,6 +7,7 @@ from api_handler import (
     get_asset_details,
     get_image_url_from_xml,
 )
+from debug_helper import debug_print
 
 processed_assets = set()
 
@@ -20,7 +21,7 @@ def download_asset(url_or_id):
 
     processed_assets.add(asset_id)
 
-    print(f"Fetched Asset ID: {asset_id}")
+    debug_print(f"Fetched Asset ID: {asset_id}")
 
     # Get the asset type and name for the initial asset
     asset_type, display_name, description = get_asset_details(asset_id)
@@ -28,7 +29,7 @@ def download_asset(url_or_id):
         print("Could not retrieve asset details, or the asset is not a Shirt or Pants.")
         return
 
-    print(f"Asset is a '{asset_type}' named '{display_name}'")
+    debug_print(f"Asset is a '{asset_type}' named '{display_name}'")
 
     model_url = get_asset_url(asset_id)
 
@@ -44,7 +45,7 @@ def download_asset(url_or_id):
                 return
 
             texture_asset_id = texture_asset_id_match.group(1)
-            print(f"Found texture Asset ID: {texture_asset_id}")
+            debug_print(f"Found texture Asset ID: {texture_asset_id}")
 
             # Get the final image download URL
             image_location_url = get_asset_url(texture_asset_id)
@@ -76,9 +77,9 @@ def recursive_asset_check(original_asset_id, description, processed_assets):
         # print(f"Skipping already processed asset: {recursive_asset_id}") # debug
         return
 
-    print(f"Found potential linked asset ID for: {recursive_asset_id}")
+    debug_print(f"Found potential linked asset ID for: {recursive_asset_id}")
 
-    original_asset_type, _, _ = get_asset_details(original_asset_id)
+    original_asset_type, display_name, _ = get_asset_details(original_asset_id)
     recursive_asset_type, _, recursive_description = get_asset_details(
         recursive_asset_id
     )
@@ -93,10 +94,10 @@ def recursive_asset_check(original_asset_id, description, processed_assets):
     #     return
 
     if original_asset_type == "Shirt" and recursive_asset_type == "Pants":
-        print("Found matching pants for the shirt. Downloading pants...\n")
+        print(f"Found matching PANTS for {display_name}.\n")
         download_asset(recursive_asset_id)
     elif original_asset_type == "Pants" and recursive_asset_type == "Shirt":
-        print("Found matching shirt for the pants. Downloading shirt...\n")
+        print(f"Found matching SHIRT for {display_name}.\n")
         download_asset(recursive_asset_id)
 
 
@@ -126,13 +127,9 @@ def download_and_save_image(image_url, asset_id, asset_type, display_name):
         with open(file_path, "wb") as f:
             f.write(response.content)
         # print(f"Successfully saved texture to: {file_path}")
-        debug_print(f"Successfully saved texture for {asset_id} ({safe_filename})\n")
+        print(
+            f"Successfully saved {asset_type.upper()} texture for {asset_id} ({safe_filename})\n"
+        )
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while downloading the image: {e}")
-
-
-def debug_print(*args, **kwargs):
-    """Debug print function to control debug output."""
-    if os.getenv("DEBUG"):
-        print(*args, **kwargs)
