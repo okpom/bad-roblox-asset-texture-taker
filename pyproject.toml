@@ -1,5 +1,5 @@
 [project]
-name = "Bad Roblox Asset Texture Grabber"
+name = "Bad Roblox Asset Texture Taker"
 version = "0.1.0"
 description = "Tool for downloading Roblox catalog item textures via Roblox's API"
 readme = "README.md"
