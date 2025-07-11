@@ -8,7 +8,7 @@ def load_api_key():
                 return None
             return api_key
     except FileNotFoundError:
-        print("Error: api_key.txt not found. Creating file. Please add your API key.")
+        print("Error: api_key.txt not found. Creating file \"./api_key.txt\". Please add your API key.")
         with open("api_key.txt", "w") as f:
             f.write("YOUR_API_KEY_HERE")
         return None
