@@ -1,5 +1,5 @@
 import sys
-from util import download_asset
+from download_handler import download_asset
 from api_key_handler import API_KEY
 
 def main():
