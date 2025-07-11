@@ -10,7 +10,8 @@ from api_handler import (
 
 processed_assets = set()
 
-def download_asset(url_or_id, api_key):
+
+def download_asset(url_or_id):
     """Handles the entire asset download process."""
     asset_id = get_asset_id(url_or_id)
     if not asset_id:
@@ -22,14 +23,14 @@ def download_asset(url_or_id, api_key):
     print(f"Fetched Asset ID: {asset_id}")
 
     # Get the asset type and name for the initial asset
-    asset_type, display_name, description = get_asset_details(asset_id, api_key)
+    asset_type, display_name, description = get_asset_details(asset_id)
     if not asset_type or not display_name:
         print("Could not retrieve asset details, or the asset is not a Shirt or Pants.")
         return
 
     print(f"Asset is a '{asset_type}' named '{display_name}'")
 
-    model_url = get_asset_url(asset_id, api_key)
+    model_url = get_asset_url(asset_id)
 
     if model_url:
         texture_asset_url = get_image_url_from_xml(model_url)
@@ -46,13 +47,12 @@ def download_asset(url_or_id, api_key):
             print(f"Found texture Asset ID: {texture_asset_id}")
 
             # Get the final image download URL
-            image_location_url = get_asset_url(texture_asset_id, api_key)
-
+            image_location_url = get_asset_url(texture_asset_id)
             if image_location_url:
                 download_and_save_image(
                     image_location_url, asset_id, asset_type, display_name
                 )
-                recursive_asset_check(asset_id, description, api_key, processed_assets)
+                recursive_asset_check(asset_id, description, processed_assets)
             else:
                 print("\nFailed to get the final image download URL.")
         else:
@@ -61,7 +61,7 @@ def download_asset(url_or_id, api_key):
         print(f"Could not find model URL for Asset ID: {asset_id}")
 
 
-def recursive_asset_check(original_asset_id, description, api_key, processed_assets):
+def recursive_asset_check(original_asset_id, description, processed_assets):
     """Checks for a linked asset in the description and downloads it if it's the corresponding clothing part."""
     if not description:
         return
@@ -78,9 +78,9 @@ def recursive_asset_check(original_asset_id, description, api_key, processed_ass
 
     print(f"Found potential linked asset ID for: {recursive_asset_id}")
 
-    original_asset_type, _, _ = get_asset_details(original_asset_id, api_key)
+    original_asset_type, _, _ = get_asset_details(original_asset_id)
     recursive_asset_type, _, recursive_description = get_asset_details(
-        recursive_asset_id, api_key
+        recursive_asset_id
     )
 
     if not original_asset_type or not recursive_asset_type:
@@ -94,10 +94,10 @@ def recursive_asset_check(original_asset_id, description, api_key, processed_ass
 
     if original_asset_type == "Shirt" and recursive_asset_type == "Pants":
         print("Found matching pants for the shirt. Downloading pants...\n")
-        download_asset(recursive_asset_id, api_key)
+        download_asset(recursive_asset_id)
     elif original_asset_type == "Pants" and recursive_asset_type == "Shirt":
         print("Found matching shirt for the pants. Downloading shirt...\n")
-        download_asset(recursive_asset_id, api_key)
+        download_asset(recursive_asset_id)
 
 
 def download_and_save_image(image_url, asset_id, asset_type, display_name):
@@ -126,7 +126,13 @@ def download_and_save_image(image_url, asset_id, asset_type, display_name):
         with open(file_path, "wb") as f:
             f.write(response.content)
         # print(f"Successfully saved texture to: {file_path}")
-        print(f"Successfully saved texture for {asset_id} ({safe_filename})\n")
+        debug_print(f"Successfully saved texture for {asset_id} ({safe_filename})\n")
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while downloading the image: {e}")
+
+
+def debug_print(*args, **kwargs):
+    """Debug print function to control debug output."""
+    if os.getenv("DEBUG"):
+        print(*args, **kwargs)

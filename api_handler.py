@@ -1,6 +1,7 @@
 import requests
 import re
 import xml.etree.ElementTree as ET
+from api_key_handler import API_KEY
 
 
 def get_asset_id(url_or_id):
@@ -16,18 +17,15 @@ def get_asset_id(url_or_id):
     return None
 
 
-def get_asset_url(asset_id, api_key):
+def get_asset_url(asset_id):
     """
     Gets the CDN download URL for the 3D model associated with an assetId.
     This URL points to the binary .rbxm model file, not the final texture image.
     """
-    if not api_key:
-        print("Error: API key is missing. Please edit the script to provide your key.")
-        return None
 
     # This is the API endpoint to get asset information, including the download location.
     url = f"https://apis.roblox.com/asset-delivery-api/v1/assetId/{asset_id}"
-    headers = {"x-api-key": api_key}
+    headers = {"x-api-key": API_KEY}
 
     print(f"Requesting URL for assetId: {asset_id}")
 
@@ -55,10 +53,10 @@ def get_asset_url(asset_id, api_key):
         return None
 
 
-def get_asset_details(asset_id, api_key):
+def get_asset_details(asset_id):
     """Gets details for an asset, including assetType, displayName, and description."""
     url = f"https://apis.roblox.com/assets/v1/assets/{asset_id}"
-    headers = {"x-api-key": api_key}
+    headers = {"x-api-key": API_KEY}
 
     try:
         response = requests.get(url, headers=headers)
