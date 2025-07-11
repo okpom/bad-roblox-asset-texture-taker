@@ -8,6 +8,7 @@ from api_handler import (
     get_image_url_from_xml,
 )
 
+processed_assets = set()
 
 def download_asset(url_or_id, api_key):
     """Handles the entire asset download process."""
@@ -16,7 +17,6 @@ def download_asset(url_or_id, api_key):
         print(f"Could not find a valid Asset ID from input: {url_or_id}")
         return
 
-    processed_assets = set()
     processed_assets.add(asset_id)
 
     print(f"Fetched Asset ID: {asset_id}")
