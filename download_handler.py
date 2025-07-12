@@ -1,6 +1,7 @@
 import requests
 import re
 import os
+from rich import print
 from api_handler import (
     get_asset_id,
     get_asset_url,
@@ -105,7 +106,7 @@ def recursive_asset_check(original_asset_id, description, processed_assets):
 def download_and_save_image(image_url, asset_id, asset_type, display_name):
     """Downloads the final texture image and saves it to a subfolder."""
     if not asset_type or not display_name:
-        print("Error: Missing asset_type or displayName for saving the image.")
+        print("[red]error:[/red] Missing asset_type or displayName for saving the image.")
         return
 
     # Sanitize display_name for use as a filename

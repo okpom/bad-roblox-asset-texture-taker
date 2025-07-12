@@ -1,4 +1,5 @@
 import sys
+from rich import print
 from download_handler import download_asset
 from api_key_handler import API_KEY
 
@@ -8,7 +9,7 @@ def main():
         sys.exit(1)
 
     if len(sys.argv) < 2:
-        print("error: missing arguments")
+        print("[red]error:[/red] missing arguments")
         print("For more information, try '--help'")
         sys.exit(1)
 
