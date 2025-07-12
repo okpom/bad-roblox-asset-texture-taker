@@ -44,10 +44,18 @@ def get_asset_url(asset_id):
         return location
 
     except requests.exceptions.HTTPError as http_err:
-        if http_err.response.status_code == 401:
-            print("Error: 401 Unauthorized. Your API key is likely invalid or expired.")
-        else:
-            print(f"HTTP Error occurred: {http_err}")
+        match http_err.response.status_code:
+            case 401:
+                print(
+                    "Error: 401 Unauthorized. Your API key is likely invalid or expired."
+                )
+            case 403:
+                print(
+                    "Error: 403 Forbidden. You do not have permission to access this asset. "
+                    "HINT: Check if your API key has 'legacy-assets' read permission enabled."
+                )
+            case _:
+                print(f"HTTP Error occurred: {http_err}")
         return None
     except requests.exceptions.RequestException as e:
         print(f"An error occurred during the request: {e}")
