@@ -7,8 +7,19 @@ def main():
     if not API_KEY:
         sys.exit(1)
 
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
+        print("error: missing arguments")
+        print("For more information, try '--help'")
+        sys.exit(1)
+
+    if sys.argv[1] == "help" or sys.argv[1] == "--help":
         print("Usage: python main.py <roblox_catalog_url_or_id>")
+        print(
+            "       python main.py -o <roblox_catalog_url_or_id>  (download and overlay)"
+        )
+        print(
+            "       python main.py bg-replace                     ( batch overlay textures)"
+        )
         sys.exit(1)
 
     url_or_id = sys.argv[1]

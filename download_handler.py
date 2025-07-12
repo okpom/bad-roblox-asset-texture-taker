@@ -17,6 +17,7 @@ def download_asset(url_or_id):
     asset_id = get_asset_id(url_or_id)
     if not asset_id:
         print(f"Could not find a valid Asset ID from input: {url_or_id}")
+        print("For more information, try '--help'")
         return
 
     processed_assets.add(asset_id)
