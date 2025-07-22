@@ -1,4 +1,7 @@
 api_key.txt
+textures/e_pants
+textures/e_shirt
+
 .DS_Store
 __pycache__
 .vscode
