@@ -1,7 +1,7 @@
 [project]
 name = "bad-roblox-asset-texture-taker"
 version = "0.1.0"
-description = "Tool for downloading Roblox catalog item textures via Roblox's API"
+description = "Tool for downloading Roblox catalog item textures via Roblox's API."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

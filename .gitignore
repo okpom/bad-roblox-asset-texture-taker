@@ -3,7 +3,7 @@ textures/e_pants
 textures/e_shirt
 
 .DS_Store
-__pycache__
+**/__pycache__
 .vscode
 .venv
 .idea
