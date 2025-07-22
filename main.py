@@ -20,7 +20,7 @@ def main():
             "       python main.py -o <roblox_catalog_url_or_id>  (download and overlay)"
         )
         print(
-            "       python main.py bg-replace                     (batch overlay textures)"
+            "       python main.py bg-replace                     (mass overlay textures)"
         )
         sys.exit(1)
 
