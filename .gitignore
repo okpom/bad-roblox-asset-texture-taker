@@ -286,3 +286,4 @@ cython_debug/
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+CLAUDE.local.md
