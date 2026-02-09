@@ -1,8 +1,8 @@
 import requests
 import re
 import xml.etree.ElementTree as ET
-from api_key_handler import API_KEY
-from debug_helper import debug_print
+from .api_key_handler import API_KEY
+from .debug_helper import debug_print
 
 
 def get_asset_id(url_or_id):

@@ -1,5 +1,5 @@
 from rich import print
-from bratt import PROJECT_ROOT
+from . import PROJECT_ROOT
 import os
 
 def load_api_key():
