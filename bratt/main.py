@@ -1,6 +1,7 @@
 import sys
 import os
 from rich.text import Text
+from bratt import PROJECT_ROOT
 from download_handler import download_asset
 from api_key_handler import API_KEY
 from overlay_template import process_all_textures
@@ -16,7 +17,6 @@ def main():
         print("For more information, try '--help'")
         sys.exit(1)
 
-    # Parse arguments
     args = sys.argv[1:]
     batch_mode = False
     overlay_mode = False
@@ -37,22 +37,22 @@ def main():
         match arg:
             case "help" | "--help":
                 print(
-                    "Usage: python main.py <roblox_catalog_url_or_id>     (download texture)"
+                    "Usage: python bratt/main.py <roblox_catalog_url_or_id>     (download texture)"
                 )
                 print(
-                    "       python main.py -o <roblox_catalog_url_or_id>  (download and overlay)"
+                    "       python bratt/main.py -o <roblox_catalog_url_or_id>  (download and overlay)"
                 )
                 print(
-                    "       python main.py -b [file.txt]                  (batch download from file [default: links.txt])"
+                    "       python bratt/main.py -b [file.txt]                  (batch download from file [default: links.txt])"
                 )
                 print(
-                    "       python main.py -b -o [file.txt]               (batch download and overlay)"
+                    "       python bratt/main.py -b -o [file.txt]               (batch download and overlay)"
                 )
                 print(
-                    "       python main.py -o -b [file.txt]               (batch download and overlay)"
+                    "       python bratt/main.py -o -b [file.txt]               (batch download and overlay)"
                 )
                 print(
-                    "       python main.py bg-replace                     (mass overlay textures)"
+                    "       python bratt/main.py bg-replace                     (mass overlay textures)"
                 )
                 print()
                 print("Note: Flags cannot be placed at the end of the command")
@@ -78,7 +78,7 @@ def main():
 
             case "-o":
                 overlay_mode = True
-                # Check if this is the last argument or if next is a flag
+                # Check if '-o' is the last argument or if next is a flag
                 if i == len(args) - 1:
                     print(Text("[red]error:[/red] -o flag cannot be the last argument"))
                     print("For more information, try '--help'")
@@ -99,9 +99,10 @@ def main():
 
         i += 1
 
-    # Handle batch processing
     if batch_mode:
-        # Check if file exists
+        if not os.path.isabs(batch_file):
+            batch_file = os.path.join(PROJECT_ROOT, batch_file)
+
         if not os.path.exists(batch_file):
             if batch_file == "links.txt":
                 print(
@@ -116,7 +117,6 @@ def main():
                 print(Text(f"[red]error:[/red] File '{batch_file}' not found."))
             sys.exit(1)
 
-        # Process batch file
         print(f"Processing batch file: {batch_file}")
         try:
             with open(batch_file, "r") as f:
@@ -149,7 +149,6 @@ def main():
             print(Text(f"[red]error:[/red] Failed to read batch file: {e}"))
             sys.exit(1)
 
-        # Apply overlay if requested for batch mode
         if overlay_mode:
             print("\nApplying template overlay to all downloaded textures...")
             success = process_all_textures()
@@ -168,10 +167,8 @@ def main():
         print("For more information, try '--help'")
         sys.exit(1)
 
-    # Download single asset
     download_asset(url_or_id)
 
-    # Apply overlay if requested for single item
     if overlay_mode:
         print("\nApplying template overlay to downloaded textures.")
         success = process_all_textures()

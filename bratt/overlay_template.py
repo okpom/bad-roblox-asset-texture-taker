@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 from rich import print
+from bratt import PROJECT_ROOT
 from debug_helper import debug_print
 
 
@@ -14,11 +15,9 @@ def overlay_images(input_folder, output_folder, template_path):
         print(f"Warning: Input folder '{input_folder}' not found. Skipping.")
         return True
 
-    # Create output folder if it doesn't exist
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    # Create "done" subfolder in input folder
     done_folder = os.path.join(input_folder, "done")
     if not os.path.exists(done_folder):
         os.makedirs(done_folder)
@@ -38,27 +37,21 @@ def overlay_images(input_folder, output_folder, template_path):
             output_path = os.path.join(output_folder, filename)
 
             try:
-                # Load the texture image
                 texture = Image.open(input_path).convert("RGBA")
 
-                # Resize template to match texture size if needed
                 if template.size != texture.size:
                     template_resized = template.resize(
-                        texture.size, Image.Resampling.LANCZOS
+                        texture.size, Image.Resampling.NEAREST
                     )
                 else:
                     template_resized = template
 
-                # Overlay template onto texture
-                # The template is placed on top of the texture
                 result = Image.alpha_composite(texture, template_resized)
 
-                # Save the result
                 result.save(output_path, "PNG")
                 debug_print(f"Processed: {filename}")
                 processed_count += 1
 
-                # Move original image to "done" subfolder
                 done_path = os.path.join(done_folder, filename)
                 os.rename(input_path, done_path)
 
@@ -71,21 +64,18 @@ def overlay_images(input_folder, output_folder, template_path):
 
 def process_all_textures():
     """Process all downloaded textures with template overlay."""
-    # Check for template.png in current directory first
-    template_path = "template.png"
+    template_path = os.path.join(PROJECT_ROOT, "template.png")
     if not os.path.exists(template_path):
-        # Check in textures folder
-        template_path = "./textures/template.png"
+        template_path = os.path.join(PROJECT_ROOT, "textures", "template.png")
         if not os.path.exists(template_path):
             print(
-                "[red]error:[/red] Template file 'template.png' not found in current or textures folder."
+                "[red]error:[/red] Template file 'template.png' not found in project root or textures folder."
             )
             return False
 
-    # Define input and output folders
     folders = [
-        ("textures/Shirt", "textures/e_shirt"),
-        ("textures/Pants", "textures/e_pants"),
+        (os.path.join(PROJECT_ROOT, "textures", "Shirt"), os.path.join(PROJECT_ROOT, "textures", "e_shirt")),
+        (os.path.join(PROJECT_ROOT, "textures", "Pants"), os.path.join(PROJECT_ROOT, "textures", "e_pants")),
     ]
 
     success = True
