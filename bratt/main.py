@@ -1,11 +1,11 @@
 import sys
 import os
 from rich.text import Text
-from bratt import PROJECT_ROOT
-from download_handler import download_asset
-from api_key_handler import API_KEY
-from overlay_template import process_all_textures
-from debug_helper import debug_print
+from . import PROJECT_ROOT
+from .download_handler import download_asset
+from .api_key_handler import API_KEY
+from .overlay_template import process_all_textures
+from .debug_helper import debug_print
 
 
 def main():

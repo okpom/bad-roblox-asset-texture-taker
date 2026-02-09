@@ -1,8 +1,8 @@
 import os
 from PIL import Image
 from rich import print
-from bratt import PROJECT_ROOT
-from debug_helper import debug_print
+from . import PROJECT_ROOT
+from .debug_helper import debug_print
 
 
 def overlay_images(input_folder, output_folder, template_path):

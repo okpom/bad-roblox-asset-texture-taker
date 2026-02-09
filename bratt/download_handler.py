@@ -2,14 +2,14 @@ import requests
 import re
 import os
 from rich import print
-from bratt import PROJECT_ROOT
-from api_handler import (
+from . import PROJECT_ROOT
+from .api_handler import (
     get_asset_id,
     get_asset_url,
     get_asset_details,
     get_image_url_from_xml,
 )
-from debug_helper import debug_print
+from .debug_helper import debug_print
 
 processed_assets = set()
 
