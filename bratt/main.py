@@ -1,7 +1,6 @@
 import sys
 import os
 from rich.text import Text
-from . import PROJECT_ROOT
 from .download_handler import download_asset
 from .api_key_handler import API_KEY
 from .overlay_template import process_all_textures
@@ -24,7 +23,7 @@ def main():
     url_or_id = None
 
     # Check for flags at the end
-    if args and args[-1].startswith("-"):
+    if args and args[-1].startswith("-") and args[-1] != "--help":
         print(Text(f"[red]error:[/red] Flag '{args[-1]}' cannot be the last argument"))
         print("Flags must be followed by their required parameters or other content")
         print("For more information, try '--help'")
@@ -37,22 +36,22 @@ def main():
         match arg:
             case "help" | "--help":
                 print(
-                    "Usage: python bratt/main.py <roblox_catalog_url_or_id>     (download texture)"
+                    "Usage: python bratt.py <roblox_catalog_url_or_id>     (download texture)"
                 )
                 print(
-                    "       python bratt/main.py -o <roblox_catalog_url_or_id>  (download and overlay)"
+                    "       python bratt.py -o <roblox_catalog_url_or_id>  (download and overlay)"
                 )
                 print(
-                    "       python bratt/main.py -b [file.txt]                  (batch download from file [default: links.txt])"
+                    "       python bratt.py -b [file.txt]                  (batch download from file [default: links.txt])"
                 )
                 print(
-                    "       python bratt/main.py -b -o [file.txt]               (batch download and overlay)"
+                    "       python bratt.py -b -o [file.txt]               (batch download and overlay)"
                 )
                 print(
-                    "       python bratt/main.py -o -b [file.txt]               (batch download and overlay)"
+                    "       python bratt.py -o -b [file.txt]               (batch download and overlay)"
                 )
                 print(
-                    "       python bratt/main.py bg-replace                     (mass overlay textures)"
+                    "       python bratt.py bg-replace                     (mass overlay textures)"
                 )
                 print()
                 print("Note: Flags cannot be placed at the end of the command")
@@ -100,8 +99,9 @@ def main():
         i += 1
 
     if batch_mode:
-        if not os.path.isabs(batch_file):
-            batch_file = os.path.join(PROJECT_ROOT, batch_file)
+        # re-enable this later if there's a problem with absolute file paths
+        # if not os.path.isabs(batch_file):
+        #     batch_file = os.path.join(PROJECT_ROOT, batch_file)
 
         if not os.path.exists(batch_file):
             if batch_file == "links.txt":
@@ -178,7 +178,7 @@ def main():
             print(
                 "Template overlay process ran into error(s). Good luck finding them.\n"
             )
-            # TODO: Write a better error handler. Right now it just says there's an error
+            # TODO: Write a more comprehensive error handler. Right now it just says there's an error
             #       if even just one image fails to process.
 
 
