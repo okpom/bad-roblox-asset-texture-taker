@@ -2,7 +2,6 @@ import requests
 import re
 import os
 from rich import print
-from . import PROJECT_ROOT
 from .api_handler import (
     get_asset_id,
     get_asset_url,
@@ -117,7 +116,7 @@ def download_and_save_image(image_url, asset_id, asset_type, display_name):
     if not safe_filename:
         safe_filename = asset_id  # fallback to asset_id if name is all special chars
 
-    folder_path = os.path.join(PROJECT_ROOT, "textures", asset_type)
+    folder_path = os.path.join("textures", asset_type)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 

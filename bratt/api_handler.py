@@ -24,7 +24,7 @@ def get_asset_url(asset_id):
     This URL points to the binary .rbxm model file, not the final texture image.
     """
 
-    # This is the API endpoint to get asset information, including the download location.
+    # This API endpoint might break in the future. Fix this if struggling.
     url = f"https://apis.roblox.com/asset-delivery-api/v1/assetId/{asset_id}"
     headers = {"x-api-key": API_KEY}
 

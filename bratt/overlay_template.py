@@ -1,7 +1,6 @@
 import os
 from PIL import Image
 from rich import print
-from . import PROJECT_ROOT
 from .debug_helper import debug_print
 
 
@@ -22,7 +21,6 @@ def overlay_images(input_folder, output_folder, template_path):
     if not os.path.exists(done_folder):
         os.makedirs(done_folder)
 
-    # Load template image
     try:
         template = Image.open(template_path).convert("RGBA")
     except Exception as e:
@@ -46,9 +44,10 @@ def overlay_images(input_folder, output_folder, template_path):
                 else:
                     template_resized = template
 
-                result = Image.alpha_composite(texture, template_resized)
+                # Overlay template onto texture
+                overlay_result = Image.alpha_composite(texture, template_resized)
 
-                result.save(output_path, "PNG")
+                overlay_result.save(output_path, "PNG")
                 debug_print(f"Processed: {filename}")
                 processed_count += 1
 
@@ -63,19 +62,18 @@ def overlay_images(input_folder, output_folder, template_path):
 
 
 def process_all_textures():
-    """Process all downloaded textures with template overlay."""
-    template_path = os.path.join(PROJECT_ROOT, "template.png")
+    template_path = "template.png"
     if not os.path.exists(template_path):
-        template_path = os.path.join(PROJECT_ROOT, "textures", "template.png")
+        template_path = "./textures/template.png"
         if not os.path.exists(template_path):
             print(
-                "[red]error:[/red] Template file 'template.png' not found in project root or textures folder."
+                "[red]error:[/red] Template file 'template.png' not found in current or textures folder."
             )
             return False
 
     folders = [
-        (os.path.join(PROJECT_ROOT, "textures", "Shirt"), os.path.join(PROJECT_ROOT, "textures", "e_shirt")),
-        (os.path.join(PROJECT_ROOT, "textures", "Pants"), os.path.join(PROJECT_ROOT, "textures", "e_pants")),
+        ("textures/Shirt", "textures/e_shirt"),
+        ("textures/Pants", "textures/e_pants"),
     ]
 
     success = True
