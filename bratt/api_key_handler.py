@@ -1,5 +1,6 @@
 from rich import print
 
+
 def load_api_key():
     """Loads the API key from the api_key.txt file."""
     try:
