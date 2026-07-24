@@ -13,3 +13,6 @@ dependencies = [
     "rich>=14.0.0",
     "urllib3==2.5.0",
 ]
+
+[tool.ruff]
+line-length = 100
