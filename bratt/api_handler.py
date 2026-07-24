@@ -1,4 +1,3 @@
-import requests
 import re
 import xml.etree.ElementTree as ET
 
@@ -21,7 +20,7 @@ def get_asset_id(url_or_id):
     return None
 
 
-def get_asset_url(asset_id):
+def get_asset_url(asset_id) -> str | None:
     """
     Gets the CDN download URL for the 3D model associated with an assetId.
     This URL points to the binary .rbxm model file, not the final texture image.
@@ -65,7 +64,7 @@ def get_asset_url(asset_id):
         return None
 
 
-def get_asset_details(asset_id):
+def get_asset_details(asset_id) -> tuple[str, str, str] | None:
     """Gets details for an asset, including assetType, displayName, and description."""
     url = f"https://apis.roblox.com/assets/v1/assets/{asset_id}"
     headers = {"x-api-key": API_KEY}
@@ -83,23 +82,34 @@ def get_asset_details(asset_id):
             print(
                 f"Unexpected Behaviour: Asset ID {asset_id} is not a Shirt or Pants. Found assetType: {asset_type}"
             )
-            return None, None, None
+            return None
 
         if not asset_type or not display_name:
             print("Error: Could not find assetType or displayName in the API response.")
-            return None, None, None
+            return None
 
         return asset_type, display_name, description
 
     except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP Error occurred while getting asset details: {http_err}")
-        return None, None, None
+        match http_err.response.status_code:
+            case 401:
+                print(
+                    "Error: 401 Unauthorized. Your API key is likely invalid or expired."
+                )
+            case 403:
+                print(
+                    "Error: 403 Forbidden. You do not have permission to access this asset. "
+                    "HINT: Check if your API key has 'legacy-assets' read permission enabled."
+                )
+            case _:
+                print(f"HTTP Error occurred while getting asset details: {http_err}")
+        return None
     except requests.exceptions.RequestException as e:
         print(f"An error occurred during the asset details request: {e}")
-        return None, None, None
+        return None
 
 
-def get_image_url_from_xml(clothes_url):
+def get_image_url_from_xml(clothes_url) -> str | None:
     """
     Downloads the model .rbxm (XML) file and parses it to find the texture URL.
     """
