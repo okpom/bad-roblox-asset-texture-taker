@@ -1,6 +1,7 @@
 api_key.txt
 textures/e_pants
 textures/e_shirt
+sfx
 
 .DS_Store
 **/__pycache__
