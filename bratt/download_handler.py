@@ -1,5 +1,3 @@
-import requests
-import re
 import os
 import re
 
@@ -10,7 +8,6 @@ from .api_handler import (
     get_asset_details,
     get_asset_id,
     get_asset_url,
-    get_asset_details,
     get_image_url_from_xml,
 )
 from .debug_helper import debug_print
@@ -31,7 +28,9 @@ def download_asset(url_or_id):
     debug_print(f"Fetched Asset ID: {asset_id}")
 
     # Get the asset type and name for the initial asset
-    asset_type, display_name, description = get_asset_details(asset_id)
+    asset_type, display_name, description = None, None, None
+    if asset_data := get_asset_details(asset_id):
+        asset_type, display_name, description = asset_data
     if not asset_type or not display_name:
         print("Could not retrieve asset details, or the asset is not a Shirt or Pants.")
         return
@@ -81,11 +80,13 @@ def recursive_asset_check(original_asset_id, description, processed_assets):
         return
 
     debug_print(f"Found potential linked asset ID for: {recursive_asset_id}")
+    original_asset_type, display_name = None, None
+    recursive_asset_type, recursive_description = None, None
+    if asset_data := get_asset_details(original_asset_id):
+        original_asset_type, display_name, _ = asset_data
 
-    original_asset_type, display_name, _ = get_asset_details(original_asset_id)
-    recursive_asset_type, _, recursive_description = get_asset_details(
-        recursive_asset_id
-    )
+    if asset_data := get_asset_details(recursive_asset_id):
+        recursive_asset_type, _, recursive_description = asset_data
 
     if not original_asset_type or not recursive_asset_type:
         return
