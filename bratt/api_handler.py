@@ -1,6 +1,9 @@
 import requests
 import re
 import xml.etree.ElementTree as ET
+
+import requests
+
 from .api_key_handler import API_KEY
 from .debug_helper import debug_print
 

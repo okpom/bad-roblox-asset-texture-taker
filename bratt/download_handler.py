@@ -1,8 +1,13 @@
 import requests
 import re
 import os
+import re
+
+import requests
 from rich import print
+
 from .api_handler import (
+    get_asset_details,
     get_asset_id,
     get_asset_url,
     get_asset_details,
@@ -41,9 +46,7 @@ def download_asset(url_or_id):
         if texture_asset_url:
             texture_asset_id_match = re.search(r"id=(\d+)", texture_asset_url)
             if not texture_asset_id_match:
-                print(
-                    f"Could not extract asset ID from texture URL: {texture_asset_url}"
-                )
+                print(f"Could not extract asset ID from texture URL: {texture_asset_url}")
                 return
 
             texture_asset_id = texture_asset_id_match.group(1)
@@ -52,9 +55,7 @@ def download_asset(url_or_id):
             # Get the final image download URL
             image_location_url = get_asset_url(texture_asset_id)
             if image_location_url:
-                download_and_save_image(
-                    image_location_url, asset_id, asset_type, display_name
-                )
+                download_and_save_image(image_location_url, asset_id, asset_type, display_name)
                 recursive_asset_check(asset_id, description, processed_assets)
             else:
                 print("\nFailed to get the final image download URL.")
@@ -110,9 +111,7 @@ def download_and_save_image(image_url, asset_id, asset_type, display_name):
         return
 
     # Sanitize display_name for use as a filename
-    safe_filename = "".join(
-        c for c in display_name if c.isalnum() or c in (" ", "_")
-    ).rstrip()
+    safe_filename = "".join(c for c in display_name if c.isalnum() or c in (" ", "_")).rstrip()
     if not safe_filename:
         safe_filename = asset_id  # fallback to asset_id if name is all special chars
 
@@ -129,9 +128,7 @@ def download_and_save_image(image_url, asset_id, asset_type, display_name):
         with open(file_path, "wb") as f:
             f.write(response.content)
         # print(f"Successfully saved texture to: {file_path}")
-        print(
-            f"Successfully saved {asset_type.upper()} texture for {asset_id} ({safe_filename})\n"
-        )
+        print(f"Successfully saved {asset_type.upper()} texture for {asset_id} ({safe_filename})\n")
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while downloading the image: {e}")
