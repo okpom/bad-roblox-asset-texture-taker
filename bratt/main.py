@@ -1,10 +1,12 @@
-import sys
 import os
+import sys
+
 from rich.text import Text
-from .download_handler import download_asset
+
 from .api_key_handler import API_KEY
-from .overlay_template import process_all_textures
 from .debug_helper import debug_print
+from .download_handler import download_asset
+from .overlay_template import process_all_textures
 
 
 def main():
@@ -120,7 +122,7 @@ def main():
         print(f"Processing batch file: {batch_file}")
         try:
             with open(batch_file, "r") as f:
-                lines = [line.strip() for line in f.readlines() if line.strip()]
+                lines = [line.strip() for line in f if line.strip()]
 
             if not lines:
                 print(
@@ -136,16 +138,20 @@ def main():
                 debug_print(f"\n--- Processing item {i}/{len(lines)}: {url_or_id} ---")
                 try:
                     download_asset(url_or_id)
-                    successful += 1
-                except Exception as e:
+                except ValueError as e:
+                        print(f"Failed to process {url_or_id}: {e}")
+                        failed += 1
+                except OSError as e:
                     print(f"Failed to process {url_or_id}: {e}")
                     failed += 1
+                else:
+                    successful += 1
 
             print("\n--- Batch processing complete ---")
             print(f"Successful: {successful}")
             print(f"Failed: {failed}")
 
-        except Exception as e:
+        except OSError as e:
             print(Text(f"[red]error:[/red] Failed to read batch file: {e}"))
             sys.exit(1)
 
@@ -165,7 +171,7 @@ def main():
     if not url_or_id:
         print(Text("[red]error:[/red] No URL or asset ID provided"))
         print("For more information, try '--help'")
-        sys.exit(1)
+        sys.exit(0)
 
     download_asset(url_or_id)
 

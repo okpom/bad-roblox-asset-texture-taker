@@ -1,6 +1,8 @@
 import os
-from PIL import Image
+
+from PIL import Image, UnidentifiedImageError
 from rich import print
+
 from .debug_helper import debug_print
 
 
@@ -14,16 +16,18 @@ def overlay_images(input_folder, output_folder, template_path):
         print(f"Warning: Input folder '{input_folder}' not found. Skipping.")
         return True
 
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
     done_folder = os.path.join(input_folder, "done")
-    if not os.path.exists(done_folder):
-        os.makedirs(done_folder)
+    
+    try:
+        os.makedirs(output_folder, exist_ok=True)
+        os.makedirs(done_folder, exist_ok=True)
+    except OSError as e:
+        print(f"[red]error:[/red] Failed to create output folders: {e}")
+        return False
 
     try:
         template = Image.open(template_path).convert("RGBA")
-    except Exception as e:
+    except (OSError, UnidentifiedImageError, Image.DecompressionBombError) as e:
         print(f"Error loading template image: {e}")
         return False
 
@@ -54,7 +58,7 @@ def overlay_images(input_folder, output_folder, template_path):
                 done_path = os.path.join(done_folder, filename)
                 os.rename(input_path, done_path)
 
-            except Exception as e:
+            except (OSError, UnidentifiedImageError, Image.DecompressionBombError) as e:
                 print(f"Error processing {filename}: {e}")
 
     print(f"Processed {processed_count} images in {input_folder}\n")
