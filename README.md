@@ -144,4 +144,10 @@ Get a Roblox API key from [Roblox Creator Dashboard](https://create.roblox.com/)
 
 ## Contributing
 
-Contributions welcome! Please open an issue or submit a pull request.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+<details><summary>Feature Requests</summary>
+
+* Write a detailed issue, explaning what it should do or how.
+
+</details>
