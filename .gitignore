@@ -18,7 +18,7 @@ sfx
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[Ss]cripts
+# [Ss]cripts # might need to uncomment this one day, but not today
 pyvenv.cfg
 .venv
 pip-selfcheck.json
