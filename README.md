@@ -4,7 +4,7 @@ TODO:
 
 # bratt - Bad Roblox Asset Texture Taker
 
-A Python tool for downloading Roblox catalog item textures (shirts/pants) via Roblox's API, with optional template overlay functionality.
+A Python archival tool for downloading Roblox assets (e.g., catalog item and clothing textures) via Roblox's API, with optional template overlay functionality.
 
 ## Features
 
