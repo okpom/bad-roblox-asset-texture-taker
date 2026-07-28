@@ -7,7 +7,7 @@ echo "Building single-file executable for bratt..."
 COMPRESSION="${1:-bz2}"  # bz2, gz, or xz
 SFX_DIR="sfx"
 DIST_DIR="dist"
-OUTPUT_FILE="$DIST_DIR/bratt.py"
+OUTPUT_FILE="$DIST_DIR/bratt-sfx.py"
 
 # Clean previous builds
 rm -rf "$SFX_DIR" "$DIST_DIR"
@@ -211,7 +211,7 @@ def main():
     extract_path = extract_archive()
 
     # Remove this script's own directory from sys.path to prevent the SFX file
-    # itself (bratt.py) from being imported as the 'bratt' module.
+    # itself (bratt-sfx.py) from being imported as the 'bratt' module.
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     if script_dir in sys.path:
         sys.path.remove(script_dir)

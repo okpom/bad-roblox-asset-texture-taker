@@ -58,19 +58,19 @@ jobs:
 
     - name: Calculate file size
       run: |
-        ls -lh dist/bratt.py
-        echo "SFX_SIZE=$(stat -c%s dist/bratt.py)" >> $GITHUB_ENV
+        ls -lh dist/bratt-sfx.py
+        echo "SFX_SIZE=$(stat -c%s dist/bratt-sfx.py)" >> $GITHUB_ENV
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: bratt-sfx
-        path: dist/bratt.py
+        path: dist/bratt-sfx.py
 
     - name: Upload to release
       if: github.event_name == 'release'
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/bratt.py
+        files: dist/bratt-sfx.py
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
